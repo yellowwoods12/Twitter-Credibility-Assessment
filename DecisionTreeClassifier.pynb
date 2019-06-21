@@ -1,0 +1,355 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Load libraries\n",
+    "import pandas as pd\n",
+    "from sklearn.tree import DecisionTreeClassifier # Import Decision Tree Classifier\n",
+    "from sklearn.model_selection import train_test_split # Import train_test_split function\n",
+    "from sklearn import metrics "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pima = pd.read_csv(\"csv/MoreFeatures.csv\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>label</th>\n",
+       "      <th>followers_count</th>\n",
+       "      <th>friends_count</th>\n",
+       "      <th>statuses_count</th>\n",
+       "      <th>other_social_media_count</th>\n",
+       "      <th>hashtag_count</th>\n",
+       "      <th>length_of_screen_name</th>\n",
+       "      <th>length_of_description</th>\n",
+       "      <th>url_count</th>\n",
+       "      <th>verified</th>\n",
+       "      <th>location</th>\n",
+       "      <th>Fr_Fo_Ratio</th>\n",
+       "      <th>St_Fo_Ratio</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>HC</td>\n",
+       "      <td>2842</td>\n",
+       "      <td>1648</td>\n",
+       "      <td>131900</td>\n",
+       "      <td>1</td>\n",
+       "      <td>14</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0.579873</td>\n",
+       "      <td>46.410978</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>HC</td>\n",
+       "      <td>3211</td>\n",
+       "      <td>7</td>\n",
+       "      <td>79448</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0.002180</td>\n",
+       "      <td>24.742448</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>HC</td>\n",
+       "      <td>3211</td>\n",
+       "      <td>7</td>\n",
+       "      <td>79448</td>\n",
+       "      <td>0</td>\n",
+       "      <td>14</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0.002180</td>\n",
+       "      <td>24.742448</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>C</td>\n",
+       "      <td>134990</td>\n",
+       "      <td>438</td>\n",
+       "      <td>31596</td>\n",
+       "      <td>0</td>\n",
+       "      <td>11</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0.003245</td>\n",
+       "      <td>0.234062</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>C</td>\n",
+       "      <td>61019</td>\n",
+       "      <td>485</td>\n",
+       "      <td>299677</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0.007948</td>\n",
+       "      <td>4.911208</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  label  followers_count  friends_count  statuses_count  \\\n",
+       "0    HC             2842           1648          131900   \n",
+       "1    HC             3211              7           79448   \n",
+       "2    HC             3211              7           79448   \n",
+       "3     C           134990            438           31596   \n",
+       "4     C            61019            485          299677   \n",
+       "\n",
+       "   other_social_media_count  hashtag_count  length_of_screen_name  \\\n",
+       "0                         1             14                      0   \n",
+       "1                         0              7                      0   \n",
+       "2                         0             14                      1   \n",
+       "3                         0             11                      1   \n",
+       "4                         0              0                      0   \n",
+       "\n",
+       "   length_of_description  url_count  verified  location  Fr_Fo_Ratio  \\\n",
+       "0                      1          1         0         0     0.579873   \n",
+       "1                      1          1         0         1     0.002180   \n",
+       "2                      1          0         0         1     0.002180   \n",
+       "3                      1          1         0         1     0.003245   \n",
+       "4                      1          1         0         1     0.007948   \n",
+       "\n",
+       "   St_Fo_Ratio  \n",
+       "0    46.410978  \n",
+       "1    24.742448  \n",
+       "2    24.742448  \n",
+       "3     0.234062  \n",
+       "4     4.911208  "
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pima.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#split dataset in features and target variable\n",
+    "feature_cols = ['followers_count', 'friends_count', 'other_social_media_count', 'length_of_screen_name','length_of_description','url_count','Fr_Fo_Ratio']\n",
+    "X = pima[feature_cols] # Features\n",
+    "y = pima.label # Target variable"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Split dataset into training set and test set\n",
+    "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Create Decision Tree classifer object\n",
+    "clf = DecisionTreeClassifier()\n",
+    "\n",
+    "# Train Decision Tree Classifer\n",
+    "clf = clf.fit(X_train,y_train)\n",
+    "\n",
+    "#Predict the response for test dataset\n",
+    "y_pred = clf.predict(X_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Accuracy: 67.44186046511628\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Model Accuracy, how often is the classifier correct?\n",
+    "print(\"Accuracy:\",metrics.accuracy_score(y_test, y_pred)*100)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "ModuleNotFoundError",
+     "evalue": "No module named 'pandas.io.data'",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mModuleNotFoundError\u001b[0m                       Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-19-d781e7f3ac7f>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mpandas\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0mpd\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      2\u001b[0m \u001b[0;32mfrom\u001b[0m \u001b[0mpandas\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mDataFrame\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 3\u001b[0;31m \u001b[0;32mimport\u001b[0m \u001b[0mpandas\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mio\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdata\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      4\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mtwython\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      5\u001b[0m \u001b[0;32mfrom\u001b[0m \u001b[0mtwython\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mTwython\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mModuleNotFoundError\u001b[0m: No module named 'pandas.io.data'"
+     ]
+    }
+   ],
+   "source": [
+    "import pandas as pd\n",
+    "from pandas import DataFrame\n",
+    "import pandas.io.data\n",
+    "import twython\n",
+    "from twython import Twython\n",
+    "\n",
+    "APP_KEY = ''\n",
+    "APP_SECRET = ''\n",
+    "ACCESS_TOKEN = ''\n",
+    "\n",
+    "d = {'id':'', 'created_at':'', 'from_user':'', 'followers_count':'', 'friends_count':'', 'statuses_count':'', 'verified':'', 'location':'', 'text':'', 'retweet_count':'', 'favorite_count':'', 'hashtag_count':'', 'url_count':'', 'mentions_count':'', 'links':''}\n",
+    "\n",
+    "def getFeatures(filename):\n",
+    "\tcsvfile = pd.read_csv(filename) #Reading .csv files containing tweets.\n",
+    "\ttweet_ids = csvfile['id_str']\t#Copying the 'id_str' attribute values to a item.\n",
+    "\tlength = len(tweet_ids)\t\t\t#Getting the length of 'tweet_ids'.\n",
+    "\tdf = DataFrame(d, index=[0])\t#Creating a DataFrame\n",
+    "\tprint (\"\\nAll Done!\")\n",
+    "\ttwitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)\n",
+    "\tACCESS_TOKEN = twitter.obtain_access_token()\n",
+    "\ttwitter = Twython(APP_KEY, access_token=ACCESS_TOKEN)\n",
+    "\t#Generating Access Token\n",
+    "\n",
+    "\tfor i in range(0, length):\n",
+    "\t\tstatus = twitter.show_status(id=tweet_ids[i])\n",
+    "\t\td['id'] = status['id_str'].encode('utf-8')\n",
+    "\t\td['created_at'] = status['created_at'].encode('utf-8')\n",
+    "\t\td['from_user'] = status['user']['screen_name'].encode('utf-8')\n",
+    "\t\td['followers_count'] = status['user']['followers_count']\n",
+    "\t\td['friends_count'] = status['user']['friends_count']\n",
+    "\t\td['statuses_count'] = status['user']['statuses_count']\n",
+    "\t\td['verified'] = status['user']['verified']\n",
+    "\t\td['location'] = 0 if (len(status['user']['location'].encode('utf-8'))==0) else 1\n",
+    "\t\td['text'] = status['text'].encode('utf-8')\n",
+    "\t\td['retweet_count'] = status['retweet_count']\n",
+    "\t\td['favorite_count'] = status['favorite_count']\n",
+    "\t\td['hashtag_count'] = len(status['entities']['hashtags'])\n",
+    "\t\td['url_count'] = len(status['entities']['urls'])\n",
+    "\t\td['mentions_count'] = len(status['entities']['user_mentions'])\n",
+    "\t\tif(len(status['entities']['urls'])>0):\n",
+    "    \t\t\tfor x in range(0, len(status['entities']['urls'])):\n",
+    "       \t\t\t\td['links'] += status['entities']['urls'][x]['expanded_url'].encode('utf-8') + \"  \"\n",
+    "\t\tdf = df.append(d, ignore_index=True)\n",
+    "\t\tdf.to_csv('NSamples.csv') #Saving file to disk\n",
+    "\t\td['links'] = ''\n",
+    "\tprint (\"\\nAll Done!\")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
